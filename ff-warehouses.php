@@ -18,7 +18,27 @@ define('FFW_VERSION', '1.0.0');
 define('FFW_FILE', __FILE__);
 define('FFW_PATH', plugin_dir_path(__FILE__));
 define('FFW_URL', plugin_dir_url(__FILE__));
-define('FFW_DB_VERSION', '1.0.0'); // for future schema upgrades
+define('FFW_DB_VERSION', '1.0.0');
+
+/**
+ * Setup automatic updates from GitHub
+ */
+require FFW_PATH . 'plugin-update-checker-master/plugin-update-checker.php';
+
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+$ffwUpdateChecker = PucFactory::buildUpdateChecker(
+    'https://github.com/abdulrahmanroston/warehouses_manager_plugin/', 
+    FFW_FILE,
+    'ff-warehouses'
+);
+
+// Set the branch that contains stable releases
+$ffwUpdateChecker->setBranch('main'); // 
+
+// Optional: Enable release assets (recommended)
+$ffwUpdateChecker->getVcsApi()->enableReleaseAssets();
+
 
 /**
  * Main plugin class
