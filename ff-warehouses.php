@@ -4,7 +4,16 @@
  * Description: Multi-warehouse management for WooCommerce with SHRMS auth integration.
  * Version: 1.0.0
  * Author: Abdulrahman Roston
+ * Author URI: https://github.com/abdulrahmanroston
+ * Plugin URI: https://github.com/abdulrahmanroston/warehouses_manager_plugin
  * Text Domain: ff-warehouses
+ * Domain Path: /languages
+ * Requires at least: 5.8
+ * Requires PHP: 7.4
+ * WC requires at least: 6.0
+ * WC tested up to: 8.5
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
  
 if (!defined('ABSPATH')) {
@@ -25,7 +34,6 @@ define('FFW_DB_VERSION', '1.0.0');
  */
 require FFW_PATH . 'includes/plugin-update-checker-master/plugin-update-checker.php';
 
-
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $ffwUpdateChecker = PucFactory::buildUpdateChecker(
@@ -35,11 +43,10 @@ $ffwUpdateChecker = PucFactory::buildUpdateChecker(
 );
 
 // Set the branch that contains stable releases
-$ffwUpdateChecker->setBranch('main'); // 
+$ffwUpdateChecker->setBranch('main');
 
-// Optional: Enable release assets (recommended)
+// Enable release assets for proper ZIP downloads
 $ffwUpdateChecker->getVcsApi()->enableReleaseAssets();
-
 
 /**
  * Main plugin class
