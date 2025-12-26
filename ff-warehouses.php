@@ -48,6 +48,9 @@ $ffwUpdateChecker->setBranch('main');
 // Enable release assets for proper ZIP downloads
 $ffwUpdateChecker->getVcsApi()->enableReleaseAssets();
 
+// Test Push
+
+
 /**
  * Main plugin class
  */
