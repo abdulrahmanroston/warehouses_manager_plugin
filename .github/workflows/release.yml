@@ -7,6 +7,10 @@ on:
     paths:
       - 'ff-warehouses.php'
 
+# Required permissions for creating releases
+permissions:
+  contents: write
+
 jobs:
   check-version-and-release:
     runs-on: ubuntu-latest
@@ -22,7 +26,7 @@ jobs:
       - name: Get plugin version
         id: get_version
         run: |
-          VERSION=$(grep -Po "(?<=Version:\s)[\d\.]+" ff-warehouses.php)
+          VERSION=$(grep -Po "(?<=Version:\s)[\d.]+" ff-warehouses.php)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "tag=v$VERSION" >> $GITHUB_OUTPUT
           echo "Detected version: $VERSION"
