@@ -6,7 +6,7 @@
  * Author: Abdulrahman Roston
  * Text Domain: ff-warehouses
  */
-
+ 
 if (!defined('ABSPATH')) {
     exit;
 }
