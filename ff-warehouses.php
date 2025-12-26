@@ -23,7 +23,8 @@ define('FFW_DB_VERSION', '1.0.0');
 /**
  * Setup automatic updates from GitHub
  */
-require FFW_PATH . 'plugin-update-checker-master/plugin-update-checker.php';
+require FFW_PATH . 'includes/plugin-update-checker-master/plugin-update-checker.php';
+
 
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
