@@ -2,7 +2,7 @@
 /**
  * Plugin Name: FF Warehouses
  * Description: Multi-warehouse management for WooCommerce with SHRMS auth integration.
- * Version: 1.0.0
+ * Version: 1.0.2
  * Author: Abdulrahman Roston
  * Author URI: https://github.com/abdulrahmanroston
  * Plugin URI: https://github.com/abdulrahmanroston/warehouses_manager_plugin
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 /**
  * Define plugin constants
  */
-define('FFW_VERSION', '1.0.0');
+define('FFW_VERSION', '1.0.2');
 define('FFW_FILE', __FILE__);
 define('FFW_PATH', plugin_dir_path(__FILE__));
 define('FFW_URL', plugin_dir_url(__FILE__));
