@@ -2,7 +2,7 @@
 /**
  * Plugin Name: FF Warehouses
  * Description: Multi-warehouse management for WooCommerce with SHRMS auth integration.
- * Version: 1.0.1
+ * Version: 1.0.0
  * Author: Abdulrahman Roston
  * Text Domain: ff-warehouses
  */
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 /**
  * Define plugin constants
  */
-define('FFW_VERSION', '1.0.1'); // TEST: Changed from 1.0.0 to 1.0.1 for auto-release testing
+define('FFW_VERSION', '1.0.0');
 define('FFW_FILE', __FILE__);
 define('FFW_PATH', plugin_dir_path(__FILE__));
 define('FFW_URL', plugin_dir_url(__FILE__));
