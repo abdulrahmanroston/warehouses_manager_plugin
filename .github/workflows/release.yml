@@ -1,0 +1,110 @@
+name: Auto Release on Version Bump
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ff-warehouses.php'
+
+jobs:
+  check-version-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      # Extract version from plugin file
+      - name: Get plugin version
+        id: get_version
+        run: |
+          VERSION=$(grep -Po "(?<=Version:\s)[\d\.]+" ff-warehouses.php)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
+      
+      # Check if tag already exists
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ steps.get_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.get_version.outputs.version }} already exists, skipping release"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.get_version.outputs.version }} does not exist, will create release"
+          fi
+      
+      # Create plugin ZIP file
+      - name: Create plugin ZIP
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          mkdir -p build
+          rsync -av --exclude='.git' --exclude='.github' --exclude='build' --exclude='*.zip' . build/ff-warehouses/
+          cd build
+          zip -r ff-warehouses.zip ff-warehouses/
+          mv ff-warehouses.zip ../
+          cd ..
+          echo "ZIP file created: ff-warehouses.zip"
+      
+      # Generate changelog from commits
+      - name: Generate changelog
+        if: steps.check_tag.outputs.exists == 'false'
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s (%h)" --no-merges)
+          else
+            COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          fi
+          
+          # Escape for GitHub Actions
+          COMMITS="${COMMITS//'%'/'%25'}"
+          COMMITS="${COMMITS//$'\n'/'%0A'}"
+          COMMITS="${COMMITS//$'\r'/'%0D'}"
+          
+          echo "commits<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMITS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      # Create GitHub Release
+      - name: Create Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.get_version.outputs.tag }}
+          name: FF Warehouses ${{ steps.get_version.outputs.tag }}
+          body: |
+            # 🚀 FF Warehouses ${{ steps.get_version.outputs.tag }}
+            
+            ## 📋 Changes in this version
+            
+            ${{ steps.changelog.outputs.commits }}
+            
+            ## 📥 Installation
+            
+            1. Download `ff-warehouses.zip` from Assets below
+            2. Go to WordPress Admin → Plugins → Add New → Upload Plugin
+            3. Choose the downloaded ZIP file and install
+            4. Activate the plugin
+            
+            ## 📚 Documentation
+            
+            For detailed documentation, visit the [README](https://github.com/abdulrahmanroston/warehouses_manager_plugin/blob/main/README.md).
+          files: ff-warehouses.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Success message
+      - name: Success
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          echo "✅ Release ${{ steps.get_version.outputs.tag }} created successfully!"
+          echo "🔗 Check it out: https://github.com/${{ github.repository }}/releases/tag/${{ steps.get_version.outputs.tag }}"
